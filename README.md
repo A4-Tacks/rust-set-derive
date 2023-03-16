@@ -1,6 +1,6 @@
 # Using macro to implement the comprehensions of imitating python language in rust
 - You can initialize common collection types with relatively little code
-- `Vec [v]`, `HashMap {k=>v}` and `HashMap {k}` have been implemented
+- `Vec [v]`, `HashMap {k=>v}` and `HashSet {k}` have been implemented
 - VecSyntax: `(<types>)?(\(capacity\))?([result; for\(...\)((for|if)\(...\))*])`
 
 # Examples
