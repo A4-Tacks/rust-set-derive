@@ -4,7 +4,7 @@
 - VecSyntax: `(<types>)?(\(capacity\))?([result; for\(...\)((for|if)\(...\))*])`
 
 # Examples
-```
+```rust
 use set_derive::*;
 # use std::{iter::zip,collections::{HashMap,HashSet}};
 
