@@ -3,6 +3,10 @@
 - `Vec [v]`, `HashMap {k=>v}` and `HashSet {k}` have been implemented
 - VecSyntax: `(<types>)?(\(capacity\))?([result; for\(...\)((for|if)\(...\))*])`
 
+
+crate: <https://crates.io/crates/set_derive>
+
+
 # Examples
 ```rust
 use set_derive::*;
