@@ -18,12 +18,12 @@ let a = set_derive!(<i64>[i; for(i in 0..5) if(i & 1 == 0)]);
 assert_eq!(a, vec![0, 2, 4]);
 
 let a = set_derive!(<i16>(30)[j; for(i in 0..5) if(i & 1 == 0)
-                            for (j in 0..=i)]);
+                            for(j in 0..=i)]);
 assert_eq!(a.capacity(), 30);
 assert_eq!(a, vec![0,0,1,2,0,1,2,3,4]);
 
 let a = set_derive!({j; for(i in 0..5) if(i & 1 == 0)
-                            for (j in 0..=i)});
+                            for(j in 0..=i)});
 assert_eq!(a, HashSet::from_iter(0..5));
 
 let a = set_derive!({j => j + 1; for(i in 0..5)
