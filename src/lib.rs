@@ -1,3 +1,13 @@
+/// Macro if
+/// # Examples
+/// ```
+/// use set_derive::macro_if;
+/// assert_eq!(macro_if!{if let a = t:(1) {1} else {2}}, 1);
+/// assert_eq!(macro_if!{if let a = {1} else {2}}, 2);
+///
+/// assert_eq!(macro_if!{if {1} else {2}}, 1);
+/// assert_eq!(macro_if!{if else {2}}, 2);
+/// ```
 #[macro_export]
 macro_rules! macro_if {
     (if let $i:ident = t:($x:expr) $tb:block else $fb:block) => {{
@@ -7,6 +17,8 @@ macro_rules! macro_if {
     (if let $i:ident = $tb:block else $fb:block) => {{
         $fb
     }};
+    (if $tb:block else $fb:block) => {{ $tb }};
+    (if else $fb:block) => {{ $fb }};
 }
 
 
@@ -50,7 +62,8 @@ macro_rules! head {
     };
 }
 
-/// Comprehensions encapsulation of `Vec[v]`, `HashMap{k=>v}`, `HashSet{k}`
+
+/// Comprehensions encapsulation of `Vec [v]`, `HashMap {k=>v}`, `HashSet {k}`
 /// # Examples
 /// ```
 /// use set_derive::*;
