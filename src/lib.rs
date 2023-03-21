@@ -39,7 +39,7 @@ macro_rules! body {
 /// ```
 #[macro_export]
 macro_rules! head {
-    (($res:tt.$f:tt($($exp:expr),+)) for( $($t:tt)+ ) $($other:tt)*) => {
+    (($res:ident.$f:tt($($exp:expr),+)) for( $($t:tt)+ ) $($other:tt)*) => {
         #[allow(unused_labels)]
         'set_derive_top: for $($t)+ {
             #[warn(unused_labels)]
@@ -77,36 +77,36 @@ macro_rules! head {
 #[macro_export]
 macro_rules! set_derive {
     ($(<$($ty:ty),+>)? $(($cap:expr))?[$exp:expr; $($t:tt)+]) => {{
-        let mut result = macro_if!{
+        let mut _macro_set_derive_result = macro_if!{
             if let cap = $(t:($cap))? {
                 Vec::$(<$($ty),+>::)?with_capacity(cap)
             } else {
                 Vec::$(<$($ty),+>::)?new()
             }
         };
-        head!((result.push($exp)) $($t)+);
-        result
+        head!((_macro_set_derive_result.push($exp)) $($t)+);
+        _macro_set_derive_result
     }};
     ($(<$($ty:ty),+>)? $(($cap:expr))?{$exp:expr; $($t:tt)+}) => {{
-        let mut result = macro_if!{
+        let mut _macro_set_derive_result = macro_if!{
             if let cap = $(t:($cap))? {
                 std::collections::HashSet::$(<$($ty),+>::)?with_capacity(cap)
             } else {
                 std::collections::HashSet::$(<$($ty),+>::)?new()
             }
         };
-        head!((result.insert($exp)) $($t)+);
-        result
+        head!((_macro_set_derive_result.insert($exp)) $($t)+);
+        _macro_set_derive_result
     }};
     ($(<$($ty:ty),+>)? $(($cap:expr))?{$k:expr => $v:expr; $($t:tt)+}) => {{
-        let mut result = macro_if!{
+        let mut _macro_set_derive_result = macro_if!{
             if let cap = $(t:($cap))? {
                 std::collections::HashMap::$(<$($ty),+>::)?with_capacity(cap)
             } else {
                 std::collections::HashMap::$(<$($ty),+>::)?new()
             }
         };
-        head!((result.insert($k, $v)) $($t)+);
-        result
+        head!((_macro_set_derive_result.insert($k, $v)) $($t)+);
+        _macro_set_derive_result
     }};
 }
