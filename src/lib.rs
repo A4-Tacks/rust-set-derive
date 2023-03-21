@@ -29,7 +29,7 @@ macro_rules! body {
 }
 
 
-/// You can use this macro to implement the derivation
+/// You can use this macro to implement the comprehensions
 /// # Examples
 /// ```
 /// # use set_derive::*;
