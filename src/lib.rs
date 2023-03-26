@@ -92,9 +92,9 @@ macro_rules! set_derive {
     ($(<$($ty:ty),+>)? $(($cap:expr))?[$exp:expr; $($t:tt)+]) => {{
         let mut _macro_set_derive_result = macro_if!{
             if let cap = $(t:($cap))? {
-                Vec::$(<$($ty),+>::)?with_capacity(cap)
+                ::std::vec::Vec::$(<$($ty),+>::)?with_capacity(cap)
             } else {
-                Vec::$(<$($ty),+>::)?new()
+                ::std::vec::Vec::$(<$($ty),+>::)?new()
             }
         };
         head!((_macro_set_derive_result.push($exp)) $($t)+);
@@ -103,9 +103,9 @@ macro_rules! set_derive {
     ($(<$($ty:ty),+>)? $(($cap:expr))?{$exp:expr; $($t:tt)+}) => {{
         let mut _macro_set_derive_result = macro_if!{
             if let cap = $(t:($cap))? {
-                std::collections::HashSet::$(<$($ty),+>::)?with_capacity(cap)
+                ::std::collections::HashSet::$(<$($ty),+>::)?with_capacity(cap)
             } else {
-                std::collections::HashSet::$(<$($ty),+>::)?new()
+                ::std::collections::HashSet::$(<$($ty),+>::)?new()
             }
         };
         head!((_macro_set_derive_result.insert($exp)) $($t)+);
@@ -114,9 +114,9 @@ macro_rules! set_derive {
     ($(<$($ty:ty),+>)? $(($cap:expr))?{$k:expr => $v:expr; $($t:tt)+}) => {{
         let mut _macro_set_derive_result = macro_if!{
             if let cap = $(t:($cap))? {
-                std::collections::HashMap::$(<$($ty),+>::)?with_capacity(cap)
+                ::std::collections::HashMap::$(<$($ty),+>::)?with_capacity(cap)
             } else {
-                std::collections::HashMap::$(<$($ty),+>::)?new()
+                ::std::collections::HashMap::$(<$($ty),+>::)?new()
             }
         };
         head!((_macro_set_derive_result.insert($k, $v)) $($t)+);
