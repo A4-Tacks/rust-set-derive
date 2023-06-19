@@ -28,15 +28,19 @@ macro_rules! body {
     (($lab:tt => $res:tt.$f:tt($($exp:expr),+))) => ($res.$f($($exp),+));
     (($lab:tt => $res:tt.$f:tt($($exp:expr),+)) if( $($t:tt)+ ) $($other:tt)*) => {
         if $($t)+ {
-            body!(($lab => $res.$f($($exp),+)) $($other)* );
+            $crate::body!(($lab => $res.$f($($exp),+)) $($other)* );
         } else {
             continue $lab;
         }
     };
     (($lab:tt => $res:tt.$f:tt($($exp:expr),+)) for( $($t:tt)+ ) $($other:tt)*) => {
         for $($t)+ {
-            body!(($lab => $res.$f($($exp),+)) $($other)* );
+            $crate::body!(($lab => $res.$f($($exp),+)) $($other)* );
         }
+    };
+    (($lab:tt => $res:tt.$f:tt($($exp:expr),+)) $block:block $($other:tt)*) => {
+        $block;
+        $crate::body!(($lab => $res.$f($($exp),+)) $($other)* );
     };
 }
 
@@ -56,7 +60,7 @@ macro_rules! head {
         'set_derive_top: for $($t)+ {
             #[warn(unused_labels)]
             {
-                body!(('set_derive_top => $res.$f($($exp),+)) $($other)* );
+                $crate::body!(('set_derive_top => $res.$f($($exp),+)) $($other)* );
             }
         }
     };
@@ -86,40 +90,65 @@ macro_rules! head {
 /// let a = set_derive!({j => j + 1; for(i in 0..5)
 ///                         if(i & 1 == 0) for(j in 0..=i)});
 /// assert_eq!(a, HashMap::from_iter(zip(0..5, 1..6)));
+///
+/// let a = set_derive!([i; for(mut i in 0..5) { i += 1; }]);
+/// assert_eq!(a, vec![1, 2, 3, 4, 5]);
 /// ```
 #[macro_export]
 macro_rules! set_derive {
-    ($(<$($ty:ty),+>)? $(($cap:expr))?[$exp:expr; $($t:tt)+]) => {{
-        let mut _macro_set_derive_result = macro_if!{
+    ($(<$($ty:ty),+$(,)?>)? $(($cap:expr))?[$exp:expr; $($t:tt)+]) => {{
+        let mut _macro_set_derive_result = $crate::macro_if!{
             if let cap = $(t:($cap))? {
                 ::std::vec::Vec::$(<$($ty),+>::)?with_capacity(cap)
             } else {
                 ::std::vec::Vec::$(<$($ty),+>::)?new()
             }
         };
-        head!((_macro_set_derive_result.push($exp)) $($t)+);
+        $crate::head!((_macro_set_derive_result.push($exp)) $($t)+);
         _macro_set_derive_result
     }};
-    ($(<$($ty:ty),+>)? $(($cap:expr))?{$exp:expr; $($t:tt)+}) => {{
-        let mut _macro_set_derive_result = macro_if!{
+    ($(<$($ty:ty),+$(,)?>)? $(($cap:expr))?{$exp:expr; $($t:tt)+}) => {{
+        let mut _macro_set_derive_result = $crate::macro_if!{
             if let cap = $(t:($cap))? {
                 ::std::collections::HashSet::$(<$($ty),+>::)?with_capacity(cap)
             } else {
                 ::std::collections::HashSet::$(<$($ty),+>::)?new()
             }
         };
-        head!((_macro_set_derive_result.insert($exp)) $($t)+);
+        $crate::head!((_macro_set_derive_result.insert($exp)) $($t)+);
         _macro_set_derive_result
     }};
-    ($(<$($ty:ty),+>)? $(($cap:expr))?{$k:expr => $v:expr; $($t:tt)+}) => {{
-        let mut _macro_set_derive_result = macro_if!{
+    ($(<$($ty:ty),+$(,)?>)? $(($cap:expr))?{$k:expr => $v:expr; $($t:tt)+}) => {{
+        let mut _macro_set_derive_result = $crate::macro_if!{
             if let cap = $(t:($cap))? {
                 ::std::collections::HashMap::$(<$($ty),+>::)?with_capacity(cap)
             } else {
                 ::std::collections::HashMap::$(<$($ty),+>::)?new()
             }
         };
-        head!((_macro_set_derive_result.insert($k, $v)) $($t)+);
+        $crate::head!((_macro_set_derive_result.insert($k, $v)) $($t)+);
         _macro_set_derive_result
     }};
+}
+
+#[cfg(test)]
+mod tests {
+    use std::{assert_eq, vec, collections::HashMap};
+
+    #[allow(unused_imports)]
+    use super::*;
+
+    #[test]
+    fn test() {
+        assert_eq!(set_derive!([i; for(i in 0..5)]), Vec::from_iter(0..5));
+
+        let arr = set_derive!([i; for(mut i in 0..5) { i += 1; }]);
+        assert_eq!(arr, vec![1, 2, 3, 4, 5]);
+
+        let arr = set_derive!([i; for(mut i in 0..8) { i += 1; } if(i & 1 == 0)]);
+        assert_eq!(arr, vec![2, 4, 6, 8]);
+
+        let dict = set_derive!({i => i + 1; for(i in 0..6)});
+        assert_eq!(dict, HashMap::from_iter((0..6).map(|i| (i, i + 1))));
+    }
 }
