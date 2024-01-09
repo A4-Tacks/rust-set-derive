@@ -96,11 +96,11 @@ fn hashmap_test() {
     });
 
     let map = hashmap_chain_list!(@top {
-        %a: 2,
+        %"a": 2,
         *[10](i.to_string() => i;
             for i in 0..10;
         ),
-        %b: -1,
+        %['b']: -1,
     });
     assert_eq!(map, {
         let mut map = HashMap::new();

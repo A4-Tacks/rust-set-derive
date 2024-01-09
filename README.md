@@ -12,10 +12,12 @@
 
 ## HashMap Syntax
 - Ordinary element: `{k => v, [k1]: v1}`
+- String ordinary key: `{%[key]: "jack"}` (`key: String`)
 - Ident key: `{name: "jack"}` (`name: &'static str`)
 - String ident key: `{%name: "jack"}` (`name: String`)
 - Variable key: `{*key: "jack"}` (`let key = "name";`)
 - Literal key: `{"name": "jack"}`
+- Literal key tostring: `{%"name": "jack"}` (`name: String`)
 - for each: Just like in Vec, but slightly different.
   e.g `{*(i => i+1; for i in 0..5)}`
 

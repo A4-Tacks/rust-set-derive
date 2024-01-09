@@ -72,6 +72,12 @@ macro_rules! hashmap_elem_size {
     (@rest $map:ident *$key:ident : $value:expr $(, $($rest:tt)*)?) => {
         1 + $crate::hashmap_elem_size!(@rest $map $($($rest)*)?)
     };
+    (@rest $map:ident %$key:literal : $value:expr $(, $($rest:tt)*)?) => {
+        1 + $crate::hashmap_elem_size!(@rest $map $($($rest)*)?)
+    };
+    (@rest $map:ident %[$key:expr] : $value:expr $(, $($rest:tt)*)?) => {
+        1 + $crate::hashmap_elem_size!(@rest $map $($($rest)*)?)
+    };
     (@rest $map:ident $key:literal : $value:expr $(, $($rest:tt)*)?) => {
         1 + $crate::hashmap_elem_size!(@rest $map $($($rest)*)?)
     };
@@ -123,6 +129,14 @@ macro_rules! hashmap_chain_list {
     };
     (@rest $map:ident *$key:ident : $value:expr $(, $($rest:tt)*)?) => {
         $map.insert($key, $value);
+        $crate::hashmap_chain_list!(@rest $map $($($rest)*)?);
+    };
+    (@rest $map:ident %$key:literal : $value:expr $(, $($rest:tt)*)?) => {
+        $map.insert(::std::string::ToString::to_string(&$key), $value);
+        $crate::hashmap_chain_list!(@rest $map $($($rest)*)?);
+    };
+    (@rest $map:ident %[$key:expr] : $value:expr $(, $($rest:tt)*)?) => {
+        $map.insert(::std::string::ToString::to_string(&$key), $value);
         $crate::hashmap_chain_list!(@rest $map $($($rest)*)?);
     };
     (@rest $map:ident $key:literal : $value:expr $(, $($rest:tt)*)?) => {
