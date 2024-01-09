@@ -1,13 +1,13 @@
 [package]
 name = "set_derive"
-version = "0.1.4"
+version = "1.0.0"
 edition = "2021"
 
 authors = ["A4-Tacks <wdsjxhno1001@163.com>"]
 license = "MIT"
-description = "Using macro to implement the derivation of imitating python language in rust"
+description = "Using Macros to Implement List comprehension Similar to Python Language"
 readme = "./README.md"
-keywords = ["python", "derive", "comprehensions", "macro", "syntax"]
+keywords = ["python", "comprehensions", "macro", "syntax"]
 
 repository = "https://github.com/A4-Tacks/rust-set-derive"
 homepage = "https://github.com/A4-Tacks/rust-set-derive"
